@@ -1,6 +1,6 @@
 #include "patricia.h"
 
-short VerifExterno(Apontador p) {
+short VerifExterno(Apontador p) { 
   return (p->tipo == Externo);
 }
 
@@ -12,6 +12,10 @@ Apontador NoInternoCriar(int i, Apontador *esq,  Apontador *dir, char comp) {
   p->No.NoInterno.dir = *dir; 
   p->No.NoInterno.comp = comp; 
   p->No.NoInterno.index = i; 
+
+  printf("no interno com caractere <%c> ", comp);
+  printf("em <%d> para o outro lado", i);
+
   return p;
 } 
 
@@ -35,8 +39,12 @@ Apontador NoExternoCriar(Palavra palavra) {
   return p;
 }  
 
-void Pesquisar(Palavra palavra, Apontador t) {
+void Pesquisar(Palavra palavra, Apontador t)
+{
+    printf("\nA palavra <%s> esta nesse no", t->No.palavra);
   if (VerifExterno(t)) {
+    printf("\nA palavra <%s> esta nesse no externo!", t->No.palavra);
+
     if (strcmp(palavra, t->No.palavra) != 0) {
       printf("Palavra nao encontrada na arvore");
       return;
@@ -45,11 +53,24 @@ void Pesquisar(Palavra palavra, Apontador t) {
       return;
     }
   }
+  printf("\nA palavra buscada <%s> ", palavra);
+
   if (strlen(palavra) < t->No.NoInterno.index) {
+    printf("\nesquerda 1");
     return Pesquisar(palavra, t->No.NoInterno.esq);
   } else if (palavra[t->No.NoInterno.index] < t->No.NoInterno.comp) {
+    printf("\nA palavra buscada <%s> ", palavra);
+    printf("\nletra da palavra: <%c> ", palavra[t->No.NoInterno.index]);
+    printf("\nletra comparada no no: <%c>", t->No.NoInterno.comp);
+    printf("\nposicao da letra no no: <%d>", t->No.NoInterno.index);
+    printf("\ncaso esquerda 2\n\n");
     return Pesquisar(palavra, t->No.NoInterno.esq);
   } else {
+    printf("\nA palavra buscada <%s> ", palavra);
+    printf("\nletra da palavra: <%c>  ", palavra[t->No.NoInterno.index]);
+    printf("\nletra comparada no no: <%c>", t->No.NoInterno.comp);
+    printf("\nposicao da letra no no: <%d>", t->No.NoInterno.index);
+    printf("\nposicao direita\n\n");
     return Pesquisar(palavra, t->No.NoInterno.dir);
   }
 } 
@@ -60,8 +81,12 @@ Apontador InserirEntre(Palavra palavra, Apontador *t, int i, char comp) {
   { 
     p = NoExternoCriar(palavra);
     if (strcmp(palavra, (*t)->No.palavra) < 0) {
+      printf("\npalavra comparada <%s>\n", (*t)->No.palavra);
+      printf("\nno externo de <%s> foi para a esquerda\n", palavra);
       return (NoInternoCriar(i, &p, t, comp));
     } else if (strcmp(palavra, (*t)->No.palavra) > 0) {
+      printf("\npalavra comparada <%s>\n", (*t)->No.palavra);
+      printf("\nno externo de <%s> foi para a direita\n", palavra);
       return (NoInternoCriar(i, t, &p, comp));
     } 
     return NULL;
@@ -95,8 +120,14 @@ Apontador Inserir(Palavra palavra, Apontador *t) {
     while (!VerifExterno(p)) { 
 
       if (palavra[p->No.NoInterno.index] < p->No.NoInterno.comp) {
+        printf("\nLetra de %s e <%c> em <%d>\n", palavra, palavra[p->No.NoInterno.index], p->No.NoInterno.index);
+        printf("Letra do no atual e <%c>\n", p->No.NoInterno.comp);
+        printf("foi pra esquerda");
         p = p->No.NoInterno.esq;
       } else if (palavra[p->No.NoInterno.index] >= p->No.NoInterno.comp) {
+        printf("\nLetra de %s e <%c> em <%d>\n", palavra, palavra[p->No.NoInterno.index], p->No.NoInterno.index);
+        printf("Letra do no atual e <%c>\n", p->No.NoInterno.comp);
+        printf("foi pra direita");
         p = p->No.NoInterno.dir;
       }
     }
@@ -113,6 +144,9 @@ Apontador Inserir(Palavra palavra, Apontador *t) {
 
       for (i = 0; i <= tam; i++) {
         if (palavra[i] != p->No.palavra[i]) {
+            printf("\nA palavra em insercao e <%s> ", palavra);
+            printf("\nletra da palavra: <%c> ", palavra[i]);
+            printf("letra da palavra no no atual: <%c> ", p->No.palavra[i]);
           if (palavra[i] < p->No.palavra[i]) {
             comp =  p->No.palavra[i];
             break;
@@ -122,12 +156,41 @@ Apontador Inserir(Palavra palavra, Apontador *t) {
           }
         }
       }
+      printf("\n<%c> ", comp);
+      printf("em <%d> ", i);
+      printf("para <%s>\n", palavra);
+      // printf(" caso direita \n");
       return InserirEntre(palavra, t, i, comp);
     } else {
       printf("A palavra <%s> ja foi inserida", palavra);
       return (*t);
     }
-    
-
   }
 }
+
+int main() { 
+  Apontador a = NULL;
+
+  a = Inserir("rato", &a);
+  a = Inserir("rataria", &a);
+  a = Inserir("roeu", &a);
+  a = Inserir("roupa", &a);
+  a = Inserir("rei", &a);
+  a = Inserir("roma", &a);
+  a = Inserir("rios", &a);
+  a = Inserir("ratos", &a);
+
+  Pesquisar("rato", a);
+  Pesquisar("rataria", a);
+  Pesquisar("roeu", a);
+  Pesquisar("roupa", a);
+  Pesquisar("rei", a);
+  Pesquisar("roma", a);
+  Pesquisar("rios", a);
+  Pesquisar("ratos", a);
+  Pesquisar("macaco", a);
+
+  PrintOrdemSimples(a);
+
+  return 0;
+} 

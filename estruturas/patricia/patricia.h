@@ -1,6 +1,5 @@
 #include <stdlib.h> 
 #include <stdio.h>
-#include <sys/time.h>
 
 #define D 8   /* depende de Palavra */
 
