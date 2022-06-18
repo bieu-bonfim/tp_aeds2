@@ -169,7 +169,8 @@ void LerPalavra(char *p, int Tam)
 int main(int argc, char *argv[])
 { 
   Inicializa(Tabela);
-  GeraPesos(p); LerPalavra(Elemento.Chave,N);
+  GeraPesos(p); 
+  LerPalavra(Elemento.Chave,N);
   while (strcmp(Elemento.Chave, "aaaaaa") != 0) 
     { 
       Insere(Elemento, p, Tabela);
