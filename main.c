@@ -2,21 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "estruturas/patricia/patricia.h"
+
+#define SIZE 20
 
 
 int main(){
     FILE *in_ptr, *nxt_ptr;
     char str[50];
-    char * bin = (char *) malloc(33);
-    char inputfile[50];
-    int n = 0;
+    char **files;
+    int n = 0, opcao, set = 0;
     printf("Menu:\n"
-           "1-Enviar o arquivo de entrada com os textos para indexamento;\n"
-           "2-Construir os indices invertidos;\n"
-           "3-Imprimir os indices invertidos;\n"
-           "4-Realizar busca de termo(s) nos indices construidos;\n"
-           "5-Sair.\n"
-           "Escolha uma das opcoes acima:");
+        "1-Enviar o arquivo de entrada com os textos para indexamento;\n"
+        "2-Construir os indices invertidos;\n"
+        "3-Imprimir os indices invertidos;\n"
+        "4-Realizar busca de termo(s) nos indices construidos;\n"
+        "5-Sair.\n"
+        "Escolha uma das opcoes acima:");
     scanf("%d",&opcao);
     if(opcao == 1){
         printf("Insira o nome do arquivo: ");
@@ -29,14 +31,22 @@ int main(){
         while (!feof (in_ptr)) {
             if (n==0) {
                 fscanf(in_ptr, "%d", &n);
+                files = malloc(n * sizeof(char*));
+                for (int i = 0; i < n; i++)
+                    files[i] = malloc((SIZE+1) * sizeof(char)); // yeah, I know sizeof(char) is 1, but to make it clear...
             } else {
                 fgets(str, 50, in_ptr);
-                printf("%s", str);
+                if (strlen(str) > 4)
+                {
+                    str[strcspn(str, "\n")] = '\0'; 
+                    strcpy(files[set], str);
+                    set++;
+                }
             }
         }
 
         fclose(in_ptr);
-        fclose(nxt_ptr);
+        // fclose(nxt_ptr);
 
     }else if(opcao == 2){
 

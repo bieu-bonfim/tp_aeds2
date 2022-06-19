@@ -4,7 +4,7 @@ short VerifExterno(Apontador p) {
   return (p->tipo == Externo);
 }
 
-Apontador NoInternoCriar(int i, Apontador *esq,  Apontador *dir, char comp) { 
+Apontador CriarInterno(int i, Apontador *esq,  Apontador *dir, char comp) { 
   Apontador p;
   p = (Apontador)malloc(sizeof(No));
   p->tipo = Interno; 
@@ -17,20 +17,22 @@ Apontador NoInternoCriar(int i, Apontador *esq,  Apontador *dir, char comp) {
 
 void PrintOrdemSimples(Apontador t) {
   if (t != NULL) {
-    if (t->tipo == Interno)
+    if (t->tipo == Interno) {
       PrintOrdemSimples(t->No.NoInterno.esq);
-    if (t->tipo == Externo)
+    }
+    if (t->tipo == Externo) {
       printf("\n%s\n", t->No.palavra);
-    if (t->tipo == Interno)
+    }
+    if (t->tipo == Interno) {
       PrintOrdemSimples(t->No.NoInterno.dir);
+    }
   }
 }
 
-Apontador NoExternoCriar(Palavra palavra) { 
+Apontador CriarExterno(Palavra palavra) { 
   Apontador p;
   p = (Apontador)malloc(sizeof(No));
   p->tipo = Externo; 
-      printf("criado no exeterno para <%s>\n ", palavra);
   strcpy(p->No.palavra, palavra);
   return p;
 }  
@@ -58,19 +60,19 @@ Apontador InserirEntre(Palavra palavra, Apontador *t, int i, char comp) {
   Apontador p;
   if (VerifExterno(*t)) 
   { 
-    p = NoExternoCriar(palavra);
+    p = CriarExterno(palavra);
     if (strcmp(palavra, (*t)->No.palavra) < 0) {
-      return (NoInternoCriar(i, &p, t, comp));
+      return (CriarInterno(i, &p, t, comp));
     } else if (strcmp(palavra, (*t)->No.palavra) > 0) {
-      return (NoInternoCriar(i, t, &p, comp));
+      return (CriarInterno(i, t, &p, comp));
     } 
     return NULL;
   } else if (i < (*t)->No.NoInterno.index) {
-    p = NoExternoCriar(palavra);
+    p = CriarExterno(palavra);
     if (palavra[i] < comp) { 
-      return (NoInternoCriar(i, &p, t, comp));
+      return (CriarInterno(i, &p, t, comp));
     } else {
-      return (NoInternoCriar(i, t, &p, comp));
+      return (CriarInterno(i, t, &p, comp));
     }
   } else { 
     int newIndex = (*t)->No.NoInterno.index;
@@ -89,7 +91,7 @@ Apontador Inserir(Palavra palavra, Apontador *t) {
   int i;
   
   if (*t == NULL) {
-    return (NoExternoCriar(palavra));
+    return (CriarExterno(palavra));
   } else { 
     p = *t;
     while (!VerifExterno(p)) { 
