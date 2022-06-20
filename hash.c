@@ -2,27 +2,35 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <string.h>
+#include "fila.c"
 #define M 11
 #define N 12   
 #define TAMALFABETO 256
 
 /* typedef unsigned int  Pesos[n]; */
+typedef char Palavra[64];
 typedef char Chave[N];
 typedef unsigned Pesos[N][TAMALFABETO];
 typedef struct Item {
   /* outros componentes */
   Chave Chave;
 } Item;
+
 typedef unsigned int TipoIndice;
 typedef struct Celula* Apontador;
+
 typedef struct Celula {
+  char *conteudo;
   Item Item;
   Apontador Prox;
 } Celula;
+
 typedef struct TipoLista {
   Celula *Primeiro, *Ultimo;
 } TipoLista;
+
 typedef TipoLista TipoDicionario[M];
+
 TipoDicionario Tabela;
 Item Elemento;
 Pesos p;
@@ -39,46 +47,16 @@ short Vazia(TipoLista Lista)
   return (Lista.Primeiro == Lista.Ultimo); 
 }
 
-void Ins(Item x, TipoLista *Lista)
+void Ins(Palavra palavra, TipoLista *Lista)
 { Lista->Ultimo->Prox = (Celula *)malloc(sizeof(Celula));
-  Lista->Ultimo = Lista->Ultimo->Prox; Lista->Ultimo->Item = x;
+  Lista->Ultimo = Lista->Ultimo->Prox; 
+  Lista->Ultimo->conteudo = palavra;
   Lista->Ultimo->Prox = NULL;
 }  
 
-void Ret(Apontador p, TipoLista *Lista, Item *Item)
-{  /* -- Obs.: o item a ser retirado o seguinte ao apontado por p -- */
-  Apontador q;
-  if (Vazia(*Lista) || p == NULL || p->Prox == NULL) 
-  { printf(" Erro Lista vazia ou posicao nao existe\n");
-    return;
-  }
-  q = p->Prox; *Item = q->Item; p->Prox = q->Prox;
-  if (p->Prox == NULL)
-  Lista->Ultimo = p;
-  free(q);
-}
 
-/*
-void GeraPesos(Pesos p)
-{ int i;
-  struct timeval semente;
-  gettimeofday(&semente, NULL); 
-  srand((int)(semente.tv_sec + 1000000*semente.tv_usec));
-  for (i = 0; i < n; i++)
-     p[i] =  1+(int) (10000.0*rand()/(RAND_MAX+1.0));
-}
 
-TipoIndice h(Chave Chave, Pesos p)
-{ int i; 
-  unsigned int Soma = 0; 
-  int comp = strlen(Chave);
-  for (i = 0; i < comp; i++) Soma += (unsigned int)Chave[i] * p[i];
-  return (Soma % M);
-}
-*/
-
-void GeraPesos(Pesos p)
-{ /* Gera valores randomicos entre 1 e 10.000 */
+void GeraPesos(Pesos p){ /* Gera valores randomicos entre 1 e 10.000 */
   int i, j;
   struct timeval semente;
   /* Utilizar o tempo como semente para a funcao srand() */
@@ -89,62 +67,51 @@ void GeraPesos(Pesos p)
       p[i][j] = 1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0));
 }
 
-TipoIndice h(Chave Chave, Pesos p)
-{ int i; unsigned int Soma = 0; 
-  int comp = strlen(Chave);
-  for (i = 0; i < comp; i++) Soma += p[i][(unsigned int)Chave[i]];
+TipoIndice h(Palavra palavra, Pesos p){ int i; unsigned int Soma = 0; 
+  int comp = strlen(palavra);
+  for (i = 0; i < comp; i++)
+    Soma += p[i][(unsigned int)palavra[i]];
   return (Soma % M);
 }
 
-void Inicializa(TipoDicionario T)
-{ int i;
+void Inicializa(TipoDicionario T){ int i;
   for (i = 0; i < M; i++) FLVazia(&T[i]);
 }
 
-Apontador Pesquisa(Chave Ch, Pesos p, TipoDicionario T)
-{ /* Obs.: Apontador de retorno aponta para o item anterior da lista */
+Apontador Pesquisa(Palavra palavra, Pesos p, TipoDicionario T){ /* Obs.: Apontador de retorno aponta para o item anterior da lista */
   TipoIndice i;
   Apontador Ap;
-  i = h(Ch, p);
+  i = h(palavra, p);
   if (Vazia(T[i])) return NULL;  /* Pesquisa sem sucesso */
   else 
   { Ap = T[i].Primeiro;
     while (Ap->Prox->Prox != NULL &&
-        strncmp(Ch, Ap->Prox->Item.Chave, sizeof(Chave))) 
+        strncmp(palavra, Ap->Prox->conteudo, sizeof(Chave))) 
       Ap = Ap->Prox;
-    if (!strncmp(Ch, Ap->Prox->Item.Chave, sizeof(Chave))) 
+    if (!strncmp(palavra, Ap->Prox->conteudo, sizeof(Chave))) 
     return Ap;
     else return NULL;  /* Pesquisa sem sucesso */
   }
 }  
 
-void Insere(Item x, Pesos p, TipoDicionario T)
+void Insere(Palavra palavra, Pesos p, TipoDicionario T)
 { 
-  if (Pesquisa(x.Chave, p, T) == NULL)
-  Ins(x, &T[h(x.Chave, p)]);
-  else printf(" Registro ja  esta  presente\n");
+  //if (Pesquisa(palavra, p, T) == NULL)
+  Ins(palavra, &T[h(palavra, p)]);
+  //else printf(" Registro ja  esta  presente\n");
 } 
 
-void Retira(Item x, Pesos p, TipoDicionario T)
-{ 
-  Apontador Ap; Ap = Pesquisa(x.Chave, p, T);
-  if (Ap == NULL)
-  printf(" Registro nao esta  presente\n");
-  else Ret(Ap, &T[h(x.Chave, p)], &x);
-}
 
-void Imp(TipoLista Lista)
-{ 
+void Imp(TipoLista Lista){ 
   Apontador Aux;
   Aux = Lista.Primeiro->Prox;
   while (Aux != NULL) 
-    { printf("%.*s ", N, Aux->Item.Chave);
+    { printf("%.*s ", N, Aux->conteudo);
       Aux = Aux->Prox;
     }
 }
 
-void Imprime(TipoDicionario Tabela)
-{ 
+void Imprime(TipoDicionario Tabela){ 
   int i;
   for (i = 0; i < M; i++) 
     { printf("%d: ", i);
@@ -154,55 +121,77 @@ void Imprime(TipoDicionario Tabela)
     }
 } 
 
-void LerPalavra(char *p, int Tam)
-{ 
-  char c; int i, j;
-  fflush(stdin); j=0;
-  while (((c=getchar())!='\n') && j<Tam-1) p[j++]= c;
-  p[j]='\0';
-  while(c != '\n') c=getchar();
-  /* Desconsiderar espacos ao final 
-    da cadeia como ocorre em Pascal.*/
-  for(i=j-1;(i>=0 && p[i]==' ');i--) p[i]='\0';
+void LerPalavra(FILE *arquivo,FILE* arquivo2,char *temp, int Tam){ 
+  char* palavras;
+  char* line;
+  int count = 0;
+  char c;
+  int i = 0;
+  for (c = getc(arquivo2); c != EOF; c = getc(arquivo2))
+       count++;
+ if(arquivo == NULL)
+   printf("Erro, nao foi possivel abrir o arquivo\n");
+  
+ else{
+  line = (char*) malloc(count * sizeof(char));
+  fgets(line, (sizeof line)*count, arquivo);
+  palavras = strdup(line);
+ }
+  temp = strtok(palavras, " ");
+  while(temp != NULL){
+    Insere(temp,p,Tabela);
+    temp = strtok(NULL, " " );
 }
+  }
 
-int main(int argc, char *argv[])
-{ 
+
+/*
+void separaPalavras(){
+  char* palavras;
+  char* line;
+  int count = 0;
+  char c;
+  FILE *arquivo;
+  FILE *arquivo2;
+  arquivo = fopen("arquivo.txt", "r");
+  arquivo2 = fopen("arquivo.txt", "r");
+  char* temp,*temp2;
+  int i = 0;
+  for (c = getc(arquivo2); c != EOF; c = getc(arquivo2))
+       count++;
+ if(arquivo == NULL)
+   printf("Erro, nao foi possivel abrir o arquivo\n");
+ else{
+     line = (char*) malloc(count * sizeof(char));
+     fgets(line, (sizeof line)*count, arquivo);
+     palavras = strdup(line);
+ }
+  LerPalavra(arquivo,Elemento.Chave,N);
+  Insere(Elemento,p,Tabela);
+  while(temp != NULL){
+  printf("%s\n",temp);
+  temp = strtok(NULL, " " );
+}
+free(line); 
+fclose(arquivo);
+fclose(arquivo2);
+}
+  */
+
+int main(int argc, char *argv[]){
+
+  FILE *arquivo;
+  FILE *arquivo2;
+  arquivo = fopen("arquivo.txt", "r");
+  arquivo2 = fopen("arquivo.txt", "r");
   Inicializa(Tabela);
-  GeraPesos(p); 
-  LerPalavra(Elemento.Chave,N);
-  while (strcmp(Elemento.Chave, "aaaaaa") != 0) 
-    { 
-      Insere(Elemento, p, Tabela);
-      LerPalavra(Elemento.Chave,N);
-    }
+  GeraPesos(p);
+  LerPalavra(arquivo,arquivo2,Elemento.Chave,N);
   printf("Tabela apos insercao:\n");
   Imprime(Tabela);
-  printf("Pesquisar :  ");
-  LerPalavra(Elemento.Chave,N);
-  while (strcmp(Elemento.Chave, "aaaaaa") != 0) 
-    { i = Pesquisa(Elemento.Chave, p, Tabela);
-      if (i == NULL) printf("pesquisa sem sucesso \n");
-      else printf("sucesso \n");
-      printf("Pesquisar :  ");
-/*    LerPalavra(Elemento.Chave,6); */
-      LerPalavra(Elemento.Chave,N);
-    }
-  printf("Retirar seguintes chaves:\n");
-  LerPalavra(Elemento.Chave,N);
-  while (strcmp(Elemento.Chave, "aaaaaa") != 0) 
-    { Retira(Elemento, p, Tabela);
-      LerPalavra(Elemento.Chave,N);
-    }
-  printf("Tabela apos retiradas:\n");
-  Imprime(Tabela);
-  printf("Inserir de novo os elementos seguintes:\n");
-  LerPalavra(Elemento.Chave,N);
-  while (strcmp(Elemento.Chave, "aaaaaa") != 0) 
-    { Insere(Elemento, p, Tabela);
-      LerPalavra(Elemento.Chave,N);
-    }
-  printf("Tabela apos novas insxercoes:\n");
-  Imprime(Tabela);
+
+  fclose(arquivo);
+  fclose(arquivo2);
   return 0;
-} 
+}
+  
