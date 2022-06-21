@@ -1,12 +1,12 @@
 #include "patricia.h"
 
-short VerifExterno(Apontador p) { 
+short VerifExterno(PatAp p) { 
   return (p->tipo == Externo);
 }
 
-Apontador NoInternoCriar(int i, Apontador *esq,  Apontador *dir, char comp) { 
-  Apontador p;
-  p = (Apontador)malloc(sizeof(No));
+PatAp NoInternoCriar(int i, PatAp *esq,  PatAp *dir, char comp) { 
+  PatAp p;
+  p = (PatAp)malloc(sizeof(PatNo));
   p->tipo = Interno; 
   p->No.NoInterno.esq = *esq;
   p->No.NoInterno.dir = *dir; 
@@ -19,7 +19,7 @@ Apontador NoInternoCriar(int i, Apontador *esq,  Apontador *dir, char comp) {
   return p;
 } 
 
-void PrintOrdemSimples(Apontador t) {
+void PrintOrdemSimples(PatAp t) {
   if (t != NULL) {
     if (t->tipo == Interno)
       PrintOrdemSimples(t->No.NoInterno.esq);
@@ -30,16 +30,16 @@ void PrintOrdemSimples(Apontador t) {
   }
 }
 
-Apontador NoExternoCriar(Palavra palavra) { 
-  Apontador p;
-  p = (Apontador)malloc(sizeof(No));
+PatAp NoExternoCriar(Palavra palavra) { 
+  PatAp p;
+  p = (PatAp)malloc(sizeof(PatNo));
   p->tipo = Externo; 
       printf("criado no exeterno para <%s>\n ", palavra);
   strcpy(p->No.palavra, palavra);
   return p;
 }  
 
-void Pesquisar(Palavra palavra, Apontador t)
+void Pesquisar(Palavra palavra, PatAp t)
 {
     printf("\nA palavra <%s> esta nesse no", t->No.palavra);
   if (VerifExterno(t)) {
@@ -75,8 +75,8 @@ void Pesquisar(Palavra palavra, Apontador t)
   }
 } 
 
-Apontador InserirEntre(Palavra palavra, Apontador *t, int i, char comp) { 
-  Apontador p;
+PatAp InserirEntre(Palavra palavra, PatAp *t, int i, char comp) { 
+  PatAp p;
   if (VerifExterno(*t)) 
   { 
     p = NoExternoCriar(palavra);
@@ -109,8 +109,8 @@ Apontador InserirEntre(Palavra palavra, Apontador *t, int i, char comp) {
   }
 }
 
-Apontador Inserir(Palavra palavra, Apontador *t) { 
-  Apontador p;
+PatAp Inserir(Palavra palavra, PatAp *t) { 
+  PatAp p;
   int i;
   
   if (*t == NULL) {
@@ -169,7 +169,7 @@ Apontador Inserir(Palavra palavra, Apontador *t) {
 }
 
 int main() { 
-  Apontador a = NULL;
+  PatAp a = NULL;
 
   a = Inserir("rato", &a);
   a = Inserir("rataria", &a);

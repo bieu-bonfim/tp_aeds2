@@ -1,5 +1,6 @@
 #include <stdlib.h> 
 #include <stdio.h>
+#include "../invIndex/invIndex.h"
 
 #define D 8   /* depende de Palavra */
 
@@ -7,36 +8,35 @@ typedef unsigned char Palavra[64]; /* a definir, dependendo da aplicacao */
 
 typedef unsigned char IndexLetra;
 
-// typedef unsigned char TipoDib;
-
 typedef enum {
   Interno, Externo
 } TipoNo;
 
-typedef struct No* Apontador; 
+typedef struct PatNo* PatAp; 
 
-typedef struct No {
+typedef struct PatNo {
   TipoNo tipo;
   union {
     struct {
-      IndexLetra index;
-      Apontador esq, dir;
+      int index;
+      PatAp esq, dir;
       char comp;
     } NoInterno ;
     Palavra palavra;
+    InvIndexList invIndexList;
   } No;
-} No;
+} PatNo;
 
-short VerifExterno(Apontador p);
+short VerifExterno(PatAp p);
 
-Apontador NoInternoCriar(int i, Apontador *esq,  Apontador *dir, char comp);
+PatAp NoInternoCriar(int i, PatAp *esq,  PatAp *dir, char comp);
 
-void PrintOrdemSimples(Apontador t);
+void PrintOrdemSimples(PatAp t);
 
-Apontador NoExternoCriar(Palavra palavra);
+PatAp NoExternoCriar(Palavra palavra);
 
-void Pesquisar(Palavra palavra, Apontador t);
+void Pesquisar(Palavra palavra, PatAp t);
 
-Apontador InserirEntre(Palavra palavra, Apontador *t, int i, char comp);
+PatAp InserirEntre(Palavra palavra, PatAp *t, int i, char comp);
 
-Apontador Inserir(Palavra palavra, Apontador *t);
+PatAp Inserir(Palavra palavra, PatAp *t);

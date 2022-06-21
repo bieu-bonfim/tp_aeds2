@@ -1,12 +1,12 @@
 #include "patricia.h"
 
-short VerifExterno(Apontador p) {
+short VerifExterno(PatAp p) {
   return (p->tipo == Externo);
 }
 
-Apontador CriarInterno(int i, Apontador *esq,  Apontador *dir, char comp) { 
-  Apontador p;
-  p = (Apontador)malloc(sizeof(No));
+PatAp CriarInterno(int i, PatAp *esq,  PatAp *dir, char comp) { 
+  PatAp p;
+  p = (PatAp)malloc(sizeof(PatNo));
   p->tipo = Interno; 
   p->No.NoInterno.esq = *esq;
   p->No.NoInterno.dir = *dir; 
@@ -15,7 +15,7 @@ Apontador CriarInterno(int i, Apontador *esq,  Apontador *dir, char comp) {
   return p;
 } 
 
-void PrintOrdemSimples(Apontador t) {
+void PrintOrdemSimples(PatAp t) {
   if (t != NULL) {
     if (t->tipo == Interno) {
       PrintOrdemSimples(t->No.NoInterno.esq);
@@ -29,15 +29,15 @@ void PrintOrdemSimples(Apontador t) {
   }
 }
 
-Apontador CriarExterno(Palavra palavra) { 
-  Apontador p;
-  p = (Apontador)malloc(sizeof(No));
+PatAp CriarExterno(Palavra palavra) { 
+  PatAp p;
+  p = (PatAp)malloc(sizeof(PatNo));
   p->tipo = Externo; 
   strcpy(p->No.palavra, palavra);
   return p;
 }  
 
-void Pesquisar(Palavra palavra, Apontador t) {
+void Pesquisar(Palavra palavra, PatAp t) {
   if (VerifExterno(t)) {
     if (strcmp(palavra, t->No.palavra) != 0) {
       printf("Palavra nao encontrada na arvore");
@@ -56,8 +56,8 @@ void Pesquisar(Palavra palavra, Apontador t) {
   }
 } 
 
-Apontador InserirEntre(Palavra palavra, Apontador *t, int i, char comp) { 
-  Apontador p;
+PatAp InserirEntre(Palavra palavra, PatAp *t, int i, char comp) { 
+  PatAp p;
   if (VerifExterno(*t)) 
   { 
     p = CriarExterno(palavra);
@@ -86,8 +86,8 @@ Apontador InserirEntre(Palavra palavra, Apontador *t, int i, char comp) {
   }
 }
 
-Apontador Inserir(Palavra palavra, Apontador *t) { 
-  Apontador p;
+PatAp Inserir(Palavra palavra, PatAp *t) { 
+  PatAp p;
   int i;
   
   if (*t == NULL) {
