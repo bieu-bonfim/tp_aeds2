@@ -32,7 +32,7 @@ int main(){
         scanf("%d",&opcao);
         if(opcao == 1){
             printf("Insira o nome do arquivo: ");
-            in_ptr = fopen("input.txt", "r");
+            in_ptr = fopen("../input.txt", "r");
             for (int i = 0; i < n; i++)
             {
                 free(files[i]);
@@ -40,7 +40,7 @@ int main(){
             free(files);
             
             if (NULL == in_ptr) {
-                printf("O arquivo não foi encontrado.\n");
+                printf("O arquivo nao foi encontrado.\n");
             }
             n = 0;
             set = 0;
@@ -71,9 +71,26 @@ int main(){
             for (int i = 0; i < n; i++)
             {
                 InsertWords(files[i], i+1, &a);
+
+
             }
+//            a = PatInsert("rato", 1, &a);
+//            a = PatInsert("rato", 1, &a);
+//            a = PatInsert("rato", 1, &a);
+//            a = PatInsert("rato", 2, &a);
+//            a = PatInsert("rato", 2, &a);
+//
+//            a = PatInsert("roeu", 1, &a);
+//            a = PatInsert("rataria", 1, &a);
+//            a = PatInsert("roupa", 1, &a);
+//            a = PatInsert("rei", 1, &a);
+//            a = PatInsert("roma", 1, &a);
+//            a = PatInsert("rola", 1, &a);
 
         }else if(opcao == 3){
+
+            PatPrintAlfabetico(a);
+//            printf("insira um arquivo de entrada primeiro");
 
         }else if(opcao == 4){
 

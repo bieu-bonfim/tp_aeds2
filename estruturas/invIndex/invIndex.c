@@ -1,15 +1,15 @@
 #include "invIndex.h"
 
-void CreateInvIndexList(InvIndexList *list) { 
-  list -> first = (InvListAp) malloc(sizeof(Cell));
-  list -> last = list -> first;
-  list -> first -> prox = NULL;
+void InvIndexCreateList(InvIndexList *list) {
+list -> first = (InvListAp) malloc(sizeof(Cell));
+list -> last = list -> first;
+list -> first -> prox = NULL;
 }
 
-void AddInvIndex(int idDoc, InvIndexList *list) { 
+void InvIndexAdd(int idDoc, InvIndexList *list) {
   Cell *p = FindIdDoc(idDoc, list->first);
   if (p != NULL) {
-    p->qnt++;
+    p->qnt = p->qnt + 1;
     return;
   }
   list -> last -> prox = (InvListAp) malloc(sizeof(Cell));
@@ -19,10 +19,13 @@ void AddInvIndex(int idDoc, InvIndexList *list) {
   list -> last -> prox = NULL;
 }
 
-void Imprime(InvIndexList lista) { 
+void InvIndexPrint(InvIndexList lista) {
   InvListAp Aux;
-  Aux = lista.first -> prox;
-  while (Aux != NULL) 
+    printf("< saa,");
+
+    Aux = lista.first -> prox;
+
+    while (Aux != NULL)
   { 
     printf("< %d,", Aux -> qnt);
     printf("%d >\n", Aux -> idDoc);
@@ -32,6 +35,7 @@ void Imprime(InvIndexList lista) {
 
 Cell* FindIdDoc(int idDoc, Cell *cell)
 {
+  printf("<%d, %d>", cell->qnt, cell->idDoc);
   if (cell == NULL)  return NULL;
   if (cell->idDoc == idDoc)  return cell;
   return FindIdDoc (idDoc, cell->prox);

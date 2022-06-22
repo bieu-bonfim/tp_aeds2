@@ -1,4 +1,4 @@
-
+/*
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -14,7 +14,7 @@ int main(void){
     arquivo2 = fopen("arquivo2.txt", "r");
     char* temp,*temp2;
     int i = 0;
-    
+
     for (c = getc(arquivo2); c != EOF; c = getc(arquivo2))
         count++;
         if(arquivo == NULL) {
@@ -29,9 +29,9 @@ int main(void){
             printf("%s\n",temp);
             temp = strtok(NULL, " " );
         }
-    free(line); 
+    free(line);
     fclose(arquivo);
-    
+
     return 0;
 }
 
@@ -41,3 +41,4 @@ int main(void){
     // }
 
 
+*/
