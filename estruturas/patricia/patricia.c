@@ -1,10 +1,10 @@
 #include "patricia.h"
 
-short VerifExterno(PatAp p) {
+short PatVerifyExterno(PatAp p) {
   return (p->tipo == Externo);
 }
 
-PatAp CriarInterno(int i, PatAp *esq,  PatAp *dir, char comp) { 
+PatAp PatCreateInterno(int i, PatAp *esq,  PatAp *dir, char comp) { 
   PatAp p;
   p = (PatAp)malloc(sizeof(PatNo));
   p->tipo = Interno; 
@@ -15,30 +15,32 @@ PatAp CriarInterno(int i, PatAp *esq,  PatAp *dir, char comp) {
   return p;
 } 
 
-void PrintOrdemSimples(PatAp t) {
+void PatPrintAlfabetico(PatAp t) {
   if (t != NULL) {
     if (t->tipo == Interno) {
-      PrintOrdemSimples(t->No.NoInterno.esq);
+      PatPrintAlfabetico(t->No.NoInterno.esq);
     }
     if (t->tipo == Externo) {
       printf("\n%s\n", t->No.palavra);
     }
     if (t->tipo == Interno) {
-      PrintOrdemSimples(t->No.NoInterno.dir);
+      PatPrintAlfabetico(t->No.NoInterno.dir);
     }
   }
 }
 
-PatAp CriarExterno(Palavra palavra) { 
+PatAp PatCreateExterno(Palavra palavra, int idDoc) { 
   PatAp p;
   p = (PatAp)malloc(sizeof(PatNo));
   p->tipo = Externo; 
   strcpy(p->No.palavra, palavra);
+  CreateInvIndexList(&p->No.invIndexList);
+  AddInvIndex(idDoc, &p->No.invIndexList);
   return p;
 }  
 
-void Pesquisar(Palavra palavra, PatAp t) {
-  if (VerifExterno(t)) {
+void PatSearch(Palavra palavra, PatAp t) {
+  if (PatVerifyExterno(t)) {
     if (strcmp(palavra, t->No.palavra) != 0) {
       printf("Palavra nao encontrada na arvore");
       return;
@@ -48,53 +50,53 @@ void Pesquisar(Palavra palavra, PatAp t) {
     }
   }
   if (strlen(palavra) < t->No.NoInterno.index) {
-    return Pesquisar(palavra, t->No.NoInterno.esq);
+    return PatSearch(palavra, t->No.NoInterno.esq);
   } else if (palavra[t->No.NoInterno.index] < t->No.NoInterno.comp) {
-    return Pesquisar(palavra, t->No.NoInterno.esq);
+    return PatSearch(palavra, t->No.NoInterno.esq);
   } else {
-    return Pesquisar(palavra, t->No.NoInterno.dir);
+    return PatSearch(palavra, t->No.NoInterno.dir);
   }
 } 
 
-PatAp InserirEntre(Palavra palavra, PatAp *t, int i, char comp) { 
+PatAp PatInsertEntre(Palavra palavra, PatAp *t, int i, char comp, int idDoc) { 
   PatAp p;
-  if (VerifExterno(*t)) 
+  if (PatVerifyExterno(*t)) 
   { 
-    p = CriarExterno(palavra);
+    p = PatCreateExterno(palavra, idDoc);
     if (strcmp(palavra, (*t)->No.palavra) < 0) {
-      return (CriarInterno(i, &p, t, comp));
+      return (PatCreateInterno(i, &p, t, comp));
     } else if (strcmp(palavra, (*t)->No.palavra) > 0) {
-      return (CriarInterno(i, t, &p, comp));
+      return (PatCreateInterno(i, t, &p, comp));
     } 
     return NULL;
   } else if (i < (*t)->No.NoInterno.index) {
-    p = CriarExterno(palavra);
+    p = PatCreateExterno(palavra, idDoc);
     if (palavra[i] < comp) { 
-      return (CriarInterno(i, &p, t, comp));
+      return (PatCreateInterno(i, &p, t, comp));
     } else {
-      return (CriarInterno(i, t, &p, comp));
+      return (PatCreateInterno(i, t, &p, comp));
     }
   } else { 
     int newIndex = (*t)->No.NoInterno.index;
 
     if(palavra[newIndex] < (*t)->No.NoInterno.comp) {
-      (*t)->No.NoInterno.esq = InserirEntre(palavra, &(*t)->No.NoInterno.esq, i, comp);
+      (*t)->No.NoInterno.esq = PatInsertEntre(palavra, &(*t)->No.NoInterno.esq, i, comp, idDoc);
     } else {
-      (*t)->No.NoInterno.dir = InserirEntre(palavra, &(*t)->No.NoInterno.dir, i, comp);
+      (*t)->No.NoInterno.dir = PatInsertEntre(palavra, &(*t)->No.NoInterno.dir, i, comp, idDoc);
     }
     return (*t);
   }
 }
 
-PatAp Inserir(Palavra palavra, PatAp *t) { 
+PatAp PatInsert(Palavra palavra, int idDoc, PatAp *t) { 
   PatAp p;
   int i;
   
   if (*t == NULL) {
-    return (CriarExterno(palavra));
+    return (PatCreateExterno(palavra, idDoc));
   } else { 
     p = *t;
-    while (!VerifExterno(p)) { 
+    while (!PatVerifyExterno(p)) { 
 
       if (palavra[p->No.NoInterno.index] < p->No.NoInterno.comp) {
         p = p->No.NoInterno.esq;
@@ -124,7 +126,7 @@ PatAp Inserir(Palavra palavra, PatAp *t) {
           }
         }
       }
-      return InserirEntre(palavra, t, i, comp);
+      return PatInsertEntre(palavra, t, i, comp, idDoc);
     } else {
       printf("A palavra <%s> ja foi inserida", palavra);
       return (*t);

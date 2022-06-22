@@ -1,5 +1,3 @@
-#include <stdlib.h> 
-#include <stdio.h>
 #include "../invIndex/invIndex.h"
 
 #define D 8   /* depende de Palavra */
@@ -27,16 +25,16 @@ typedef struct PatNo {
   } No;
 } PatNo;
 
-short VerifExterno(PatAp p);
+short PatVerifyExterno(PatAp p);
 
-PatAp NoInternoCriar(int i, PatAp *esq,  PatAp *dir, char comp);
+PatAp PatCreateExterno(Palavra palavra, int idF);
 
-void PrintOrdemSimples(PatAp t);
+PatAp PatCreateInterno(int i, PatAp *esq,  PatAp *dir, char comp);
 
-PatAp NoExternoCriar(Palavra palavra);
+void PatPrintAlfabetico(PatAp t);
 
-void Pesquisar(Palavra palavra, PatAp t);
+void PatSearch(Palavra palavra, PatAp t);
 
-PatAp InserirEntre(Palavra palavra, PatAp *t, int i, char comp);
+PatAp PatInsertEntre(Palavra palavra, PatAp *t, int i, char comp, int idF);
 
-PatAp Inserir(Palavra palavra, PatAp *t);
+PatAp PatInsert(Palavra palavra, int idF, PatAp *t);
