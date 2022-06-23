@@ -1,7 +1,20 @@
 #include <math.h>
+#include <ctype.h>
 #include "estruturas/patricia/patricia.h"
 
 #define SIZE 20
+
+void NoPunctAllLower(char * str) {
+    int i = 0;
+    int p = 0;
+    int len = strlen(str);
+    for (i = 0; i < len; i++) {
+        if (!ispunct(str[i])) {
+            str[p] = tolower(str[i]);
+            p++;
+        }
+    }
+}
 
 void InsertWords (char * fileName, int idDoc, PatAp * a) {
     unsigned char str[1024];
@@ -9,6 +22,7 @@ void InsertWords (char * fileName, int idDoc, PatAp * a) {
     doc = fopen(fileName, "r");
 
     while (fscanf(doc, " %1023s", str) == 1) {
+        NoPunctAllLower(str);
         *a = PatInsert(str, idDoc, a);
     }
 }
@@ -70,22 +84,22 @@ int main(){
             }
             for (int i = 0; i < n; i++)
             {
-                InsertWords(files[i], i+1, &a);
+//                InsertWords(files[i], i+1, &a);
 
 
             }
-//            a = PatInsert("rato", 1, &a);
-//            a = PatInsert("rato", 1, &a);
-//            a = PatInsert("rato", 1, &a);
-//            a = PatInsert("rato", 2, &a);
-//            a = PatInsert("rato", 2, &a);
-//
-//            a = PatInsert("roeu", 1, &a);
-//            a = PatInsert("rataria", 1, &a);
-//            a = PatInsert("roupa", 1, &a);
-//            a = PatInsert("rei", 1, &a);
-//            a = PatInsert("roma", 1, &a);
-//            a = PatInsert("rola", 1, &a);
+            a = PatInsert("rato", 1, &a);
+            a = PatInsert("rato", 1, &a);
+            a = PatInsert("rato", 1, &a);
+            a = PatInsert("rato", 2, &a);
+            a = PatInsert("rato", 2, &a);
+
+            a = PatInsert("roeu", 1, &a);
+            a = PatInsert("rataria", 1, &a);
+            a = PatInsert("roupa", 1, &a);
+            a = PatInsert("rei", 1, &a);
+            a = PatInsert("roma", 1, &a);
+            a = PatInsert("rola", 1, &a);
 
         }else if(opcao == 3){
 
@@ -93,7 +107,19 @@ int main(){
 //            printf("insira um arquivo de entrada primeiro");
 
         }else if(opcao == 4){
-
+            InvIndexList list;
+            InvIndexCreateList(&list);
+            InvIndexAdd(1, &list);
+            InvIndexAdd(1, &list);
+            InvIndexAdd(1, &list);
+            InvIndexAdd(1, &list);
+            InvIndexAdd(2, &list);
+            InvIndexAdd(2, &list);
+            InvIndexAdd(3, &list);
+            InvIndexAdd(3, &list);
+            InvIndexAdd(3, &list);
+            InvIndexAdd(4, &list);
+            InvIndexPrint(list);
         }else if(opcao == 5){
             break;
         }else{

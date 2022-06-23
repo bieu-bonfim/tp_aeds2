@@ -21,8 +21,8 @@ typedef struct PatNo {
       char comp;
     } NoInterno ;
     Palavra palavra;
-    InvIndexList invIndexList;
   } No;
+  InvIndexList *invIndexList;
 } PatNo;
 
 short PatVerifyExterno(PatAp p);

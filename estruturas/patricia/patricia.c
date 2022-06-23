@@ -13,7 +13,26 @@ PatAp PatCreateInterno(int i, PatAp *esq, PatAp *dir, char comp) {
   p->No.NoInterno.comp = comp; 
   p->No.NoInterno.index = i; 
   return p;
-} 
+}
+
+PatAp PatCreateExterno(Palavra palavra, int idDoc) {
+    PatAp p;
+//    InvIndexList list;
+//    InvIndexCreateList(&list);
+
+    p = (PatAp)malloc(sizeof(PatNo));
+    p->tipo = Externo;
+    strcpy(p->No.palavra, palavra);
+
+    p->invIndexList = (InvIndexList*) malloc(sizeof (InvIndexList ));
+    InvIndexCreateList(p->invIndexList);
+    InvIndexAdd(idDoc, p->invIndexList);
+    InvIndexPrint(*p->invIndexList);
+    strcpy(p->No.palavra, palavra);
+    InvIndexPrint(*p->invIndexList);
+
+    return p;
+}
 
 void PatPrintAlfabetico(PatAp t) {
   if (t != NULL) {
@@ -21,8 +40,8 @@ void PatPrintAlfabetico(PatAp t) {
       PatPrintAlfabetico(t->No.NoInterno.esq);
     }
     if (t->tipo == Externo) {
-      printf("\n%s\n", t->No.palavra);
-      InvIndexPrint(t->No.invIndexList);
+        printf("\n%s\n", t->No.palavra);
+      InvIndexPrint(*t->invIndexList);
     }
     if (t->tipo == Interno) {
       PatPrintAlfabetico(t->No.NoInterno.dir);
@@ -30,17 +49,6 @@ void PatPrintAlfabetico(PatAp t) {
   }
 }
 
-PatAp PatCreateExterno(Palavra palavra, int idDoc) {
-  PatAp p;
-  p = (PatAp)malloc(sizeof(PatNo));
-  p->tipo = Externo;
-    strcpy(p->No.palavra, palavra);
-
-    InvIndexCreateList(&p->No.invIndexList);
-    InvIndexAdd(idDoc, &p->No.invIndexList);
-
-    return p;
-}  
 
 void PatSearch(Palavra palavra, PatAp t) {
   if (PatVerifyExterno(t)) {
@@ -132,7 +140,7 @@ PatAp PatInsert(Palavra palavra, int idDoc, PatAp *t) {
       return PatInsertEntre(palavra, t, i, comp, idDoc);
     } else {
         printf("A palavra <%s> ja foi inserida", p->No.palavra);
-//        InvIndexAdd(idDoc, &p->No.invIndexList);
+        InvIndexAdd(idDoc, p->invIndexList);
 //        strcpy(p->No.palavra, palavra);
       return (*t);
     }

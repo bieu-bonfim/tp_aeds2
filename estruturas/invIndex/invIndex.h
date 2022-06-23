@@ -15,10 +15,10 @@ typedef struct {
 } InvIndexList;
 
 
-void InvIndexCreateList(InvIndexList *list);
+void InvIndexCreateList(InvIndexList* list);
 
 void InvIndexAdd(int idDoc, InvIndexList *list);
 
 void InvIndexPrint(InvIndexList lista);
 
-Cell* FindIdDoc(int idDoc, Cell *cell);
+InvListAp FindIdDoc(int idDoc, InvIndexList list);
