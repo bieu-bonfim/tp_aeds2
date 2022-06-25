@@ -1,16 +1,18 @@
-#include <math.h>
 #include <ctype.h>
+#include <windows.h>
 #include "estruturas/patricia/patricia.h"
 
 #define SIZE 20
 
 void NoPunctAllLower(char * str) {
-    int i = 0;
     int p = 0;
-    int len = strlen(str);
-    for (i = 0; i < len; i++) {
-        if (!ispunct(str[i])) {
-            str[p] = tolower(str[i]);
+    char * str2;
+    strcpy(str2, str);
+    int len = strlen(str2);
+    for (int i = 0; i < len; i++) {
+        str[i] = (char) 0;
+        if (!ispunct(str2[i])) {
+            str[p] = tolower(str2[i]);
             p++;
         }
     }
@@ -31,21 +33,30 @@ int main(){
     PatAp a = NULL; 
     FILE *in_ptr;
     char str[50];
+    char file[50];
     char **files = NULL;
     int n = 0, opcao, set = 0;
     while (1)
     {
-        /* code */    
-        printf("Menu:\n"
-            "1-Enviar o arquivo de entrada com os textos para indexamento;\n"
-            "2-Construir os indices invertidos;\n"
-            "3-Imprimir os indices invertidos;\n"
-            "4-Realizar busca de termo(s) nos indices construidos;\n"
-            "5-Sair.\n"
-            "Escolha uma das opcoes acima:");
+        /* code */
+        system("CLS");
+        printf("\n\t\t\t//====================================================================\\\\ \n");
+        printf("\t\t\t||                           Menu Principal                           ||\n");
+        printf("\t\t\t|]====================================================================[|\n");
+        printf("\t\t\t||                                                                    ||\n");
+        printf("\t\t\t||  1 - Enviar o arquivo de entrada com os textos para indexamento;   ||\n");
+        printf("\t\t\t||  2 - Construir os indices invertidos;                              ||\n");
+        printf("\t\t\t||  3 - Imprimir os indices invertidos;                               ||\n");
+        printf("\t\t\t||  4 - Realizar busca de termo(s) nos indices construidos            ||\n");
+        printf("\t\t\t||  5 - Sair.                                                         ||\n");
+        printf("\t\t\t||                                                                    ||\n");
+        printf("\t\t\t\\\\====================================================================// \n");
+        printf("\n\t\t\t>> Escolha uma das opcoes acima: ");
         scanf("%d",&opcao);
         if(opcao == 1){
-            printf("Insira o nome do arquivo: ");
+            printf("\n\t\t\t>> Insira o nome do arquivo: ");
+//            scanf("%d",file);
+
             in_ptr = fopen("../input.txt", "r");
             for (int i = 0; i < n; i++)
             {
@@ -84,42 +95,13 @@ int main(){
             }
             for (int i = 0; i < n; i++)
             {
-//                InsertWords(files[i], i+1, &a);
-
-
+                InsertWords(files[i], i+1, &a);
             }
-            a = PatInsert("rato", 1, &a);
-            a = PatInsert("rato", 1, &a);
-            a = PatInsert("rato", 1, &a);
-            a = PatInsert("rato", 2, &a);
-            a = PatInsert("rato", 2, &a);
-
-            a = PatInsert("roeu", 1, &a);
-            a = PatInsert("rataria", 1, &a);
-            a = PatInsert("roupa", 1, &a);
-            a = PatInsert("rei", 1, &a);
-            a = PatInsert("roma", 1, &a);
-            a = PatInsert("rola", 1, &a);
 
         }else if(opcao == 3){
-
             PatPrintAlfabetico(a);
-//            printf("insira um arquivo de entrada primeiro");
-
         }else if(opcao == 4){
-            InvIndexList list;
-            InvIndexCreateList(&list);
-            InvIndexAdd(1, &list);
-            InvIndexAdd(1, &list);
-            InvIndexAdd(1, &list);
-            InvIndexAdd(1, &list);
-            InvIndexAdd(2, &list);
-            InvIndexAdd(2, &list);
-            InvIndexAdd(3, &list);
-            InvIndexAdd(3, &list);
-            InvIndexAdd(3, &list);
-            InvIndexAdd(4, &list);
-            InvIndexPrint(list);
+
         }else if(opcao == 5){
             break;
         }else{

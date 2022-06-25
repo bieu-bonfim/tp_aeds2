@@ -24,11 +24,11 @@ void InvIndexPrint(InvIndexList list) {
     InvListAp Aux;
     Aux = list.first -> prox;
     while (Aux != NULL)
-  {
-      printf("< %d,", Aux -> qnt);
-    printf("%d >\n", Aux -> idDoc);
-    Aux = Aux -> prox;
-  }
+    {
+        printf("< %d,", Aux -> qnt);
+        printf("%d > ", Aux -> idDoc);
+        Aux = Aux -> prox;
+    }
 }
 
 InvListAp FindIdDoc(int idDoc, InvIndexList list)
