@@ -20,6 +20,13 @@ void InvIndexAdd(int idDoc, InvIndexList *list) {
     list -> last -> prox = NULL;
 }
 
+InvListAp InvIndexSearch(int idDoc,InvIndexList *list,Palavra palavra){
+    int quantidadeAux;
+    InvListAp p = FindIdDoc(idDoc, *list),aux;
+    quantidadeAux = FindQntPalavra(palavra, p);
+    return quantidadeAux;
+}
+
 void InvIndexPrint(InvIndexList list) {
     InvListAp Aux;
     Aux = list.first -> prox;

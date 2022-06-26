@@ -43,14 +43,12 @@ void PatPrintAlfabetico(PatAp t) {
 }
 
 
-void PatSearch(Palavra palavra, PatAp t) {
+PatAp PatSearch(Palavra palavra, PatAp t) {
     if (PatVerifyExterno(t)) {
         if (strcmp(palavra, t->No.palavra) != 0) {
-            printf("Palavra nao encontrada na arvore");
-            return;
+            return NULL;
         } else {
-            printf("\nA palavra <%s> foi encontrada!", palavra);
-            return;
+            return t;
         }
     }
     if (strlen(palavra) < t->No.NoInterno.index) {
@@ -135,4 +133,17 @@ PatAp PatInsert(Palavra palavra, int idDoc, PatAp *t) {
             return (*t);
         }
     }
+}
+
+int qntDocHaveTermPat(int idDoc, PatAp t,Palavra palavra){
+    int contador = 0;
+    PatAp aux;
+    for(int i = 1,i<=idDoc,i++){
+        InvListAp p = FindIdDoc(i, *list);
+        aux = void PatSearch(palavra, t); 
+        if(aux != NULL){
+            contador++;
+        }
+    }
+    return contador;
 }

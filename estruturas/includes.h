@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include <ctype.h>
 #include <windows.h>
+#include "math.h"
 
 typedef char Palavra[64];
 

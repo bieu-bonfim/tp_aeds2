@@ -19,6 +19,8 @@ void InvIndexCreateList(InvIndexList* list);
 
 void InvIndexAdd(int idDoc, InvIndexList *list);
 
+InvListAp InvIndexSearch(int idDoc,InvIndexList *list,Palavra palavra);
+
 void InvIndexPrint(InvIndexList lista);
 
 InvListAp FindIdDoc(int idDoc, InvIndexList list);

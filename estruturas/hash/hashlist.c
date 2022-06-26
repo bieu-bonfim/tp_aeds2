@@ -45,3 +45,31 @@ HshCellAp FindPalavra(Palavra palavra, HshList list)
     }
     return NULL;
 }
+
+HshCellAp FindQntPalavra(Palavra palavra, HshList list)
+{
+    HshCellAp Aux;
+    Aux = list.first->prox;
+
+    while (Aux != NULL)
+    {
+        if (strcmp(Aux->palavra, palavra) == 0) {
+            return Aux->qnt;
+        }
+        Aux = Aux -> prox;
+    }
+    return NULL;
+}
+
+int qntDocHaveTermHash(int idDoc,HshList list,Palavra palavra){
+    int contador = 0;
+    HshCellAp aux;
+    for(int i = 1,i<=idDoc,i++){
+        InvListAp p = FindIdDoc(i, *list);
+        aux = FindPalavra(palavra, p);
+        if(aux != NULL){
+            contador++;
+        }
+    }
+    return contador;
+}

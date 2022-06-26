@@ -4,55 +4,11 @@
 
 #define SIZE 20
 
-void NoPunctAllLower(char * str) {
-    int p = 0;
-    char * str2;
-    strcpy(str2, str);
-    int len = strlen(str2);
-    for (int i = 0; i < len; i++) {
-        str[i] = (char) 0;
-        if (!ispunct(str2[i])) {
-            str[p] = tolower(str2[i]);
-            p++;
-        }
-    }
-}
-
-void InsertWordsPat (DocList docs, int idDoc, PatAp * a) {
-    unsigned char str[1024];
-    int pCont = 0;
-
-    DocListAp docInfo;
-    docInfo = FindDoc(idDoc, docs);
-
-    FILE *doc;
-    doc = fopen(docInfo->docName, "r");
-
-    while (fscanf(doc, " %1023s", str) == 1) {
-        NoPunctAllLower(str);
-        *a = PatInsert(str, idDoc, a);
-        pCont++;
-    }
-    docInfo->qntPalavras = pCont;
-}
-
-void InsertWordsHsh (DocList docs, int idDoc, HashTable b, Pesos p) {
-    unsigned char str[1024];
-    int pCont = 0;
-
-    DocListAp docInfo;
-    docInfo = FindDoc(idDoc, docs);
-
-    FILE *doc;
-    doc = fopen(docInfo->docName, "r");
-
-    while (fscanf(doc, " %1023s", str) == 1) {
-        NoPunctAllLower(str);
-        HshTableInsert(str, idDoc, p, b);
-        pCont++;
-    }
-    docInfo->qntPalavras = pCont;
-}
+void NoPunctAllLower(char * str);
+void InsertWordsPat (DocList docs, int idDoc, PatAp * a);
+void InsertWordsHsh (DocList docs, int idDoc, HashTable b, Pesos p);
+int calculoRelevancia(int numDocumentos,int qntTermosDoc,int numOcorrencias,int numDocContemTermo);
+void quick_sort(int *a, int left, int right);
 
 int main(){
 
@@ -123,6 +79,9 @@ int main(){
                         cont++;
                     }
                 }
+                //criando vetor com base na quantidade de arquivos para armazenar quantidade de palavras
+                char quantidadePalavrasPat[n];
+                char quantidadePalavrasHash[n];
             }
             fclose(in_ptr);
 
@@ -162,6 +121,7 @@ int main(){
                     for (int i = 1; i <= n; i++)
                     {
                         InsertWordsPat(docs, i, &patricia);
+                        quantidadePalavrasPat[i] = docInfo->qntPalavras;
                     }
                     printf("\n\t\t\t>> Indices invertidos criados com sucesso!");
                     patUse = 1;
@@ -176,6 +136,8 @@ int main(){
                     for (int i = 1; i <= n; i++)
                     {
                         InsertWordsHsh(docs, i, hashTable, p);
+                        quantidadePalavrasHash[i] = docInfo->qntPalavras;
+
                     }
                     printf("\n\t\t\t>> Indices invertidos criados com sucesso!");
                     hshUse = 1;
@@ -215,6 +177,52 @@ int main(){
                 }
             }
         }else if(opcao == 4){
+            char buffer[1000];
+            int escolhaDePesquisa;
+            int numDocumentos;
+            printf("Qual(is) termo(os) você deseja buscar?\n"
+            "Insira os termos seguindo os exemplos abaixo:\n"
+            "pao rato bolo\n"
+            "arroz\n"
+            "quem casa\n"
+            "Insira os termos:");
+            scanf("%s",buffer);
+            int tamanhoPalavra = strlen(buffer);
+            char *palavraParaBusca = (char *)malloc(sizeof(char)*tamanhoPalavra);
+            int matrizRelevancia[n][1];
+
+            printf("Em qual estrutura você deseja fazer a busca de termo(s):\n"
+            "1- Tabela Hash\n"
+            "2- Árvore Patricia\n"
+            "Digite o número da estrutura escolhida:");
+            scanf("%d",escolhaDePesquisa);
+            if(escolhaDePesquisa == 1){///pesquisa na hash
+                for(int i = 1; i<=n;i++){
+                    int numOcorrencias = InvIndexSearch(i,hashTable,palavraParaBusca);
+                    int qntDocHave = qntDocHaveTermHash(i,hashTable,palavraParaBusca);
+                    int valorRelevancia = calculoRelevancia(n,quantidadePalavrasHash[i],numOcorrencias,qntDocHave);
+                    matrizRelevancia[i][0] = valorRelevancia;
+                    ordenarRelevancia(int *a, int left, int right);
+                }
+                for(int j = 0;j<n;j++){
+                        printf("Texto %d (arquivo%d.txt\n",matrizRelevancia[i][0]);
+                    } 
+            
+            }else if(escolhaDePesquisa == 2){//pesquisa na patricia
+                for(int i = 1; i<=n;i++){
+                    int numOcorrencias = InvIndexSearch(i,patricia,palavraParaBusca);
+                    int qntDocHave = int qntDocHaveTermPat(i,patricia,palavraParaBusca);
+                    int valorRelevancia = calculoRelevancia(n,quantidadePalavrasHash[i],numOcorrencias,qntDocHave);
+                    matrizRelevancia[i][0] = valorRelevancia;
+                    ordenarRelevancia(int *a, int left, int right);
+                }
+                for(int j = 0;j<n;j++){
+                    printf("Texto %d (arquivo%d.txt\n",matrizRelevancia[i][0]);
+                } 
+
+            }else{
+                printf("Escolha inválida. Por favor escolha entre 1 e 2.");
+            }
 
         }else if(opcao == 5){
             break;
@@ -224,4 +232,97 @@ int main(){
     }
 
     return 0;
+}
+
+void NoPunctAllLower(char * str) {
+    int p = 0;
+    char * str2;
+    strcpy(str2, str);
+    int len = strlen(str2);
+    for (int i = 0; i < len; i++) {
+        str[i] = (char) 0;
+        if (!ispunct(str2[i])) {
+            str[p] = tolower(str2[i]);
+            p++;
+        }
+    }
+}
+
+void InsertWordsPat (DocList docs, int idDoc, PatAp * a) {
+    unsigned char str[1024];
+    int pCont = 0;
+
+    DocListAp docInfo;
+    docInfo = FindDoc(idDoc, docs);
+
+    FILE *doc;
+    doc = fopen(docInfo->docName, "r");
+
+    while (fscanf(doc, " %1023s", str) == 1) {
+        NoPunctAllLower(str);
+        *a = PatInsert(str, idDoc, a);
+        pCont++;
+    }
+    docInfo->qntPalavras = pCont;
+}
+
+void InsertWordsHsh (DocList docs, int idDoc, HashTable b, Pesos p) {
+    unsigned char str[1024];
+    int pCont = 0;
+
+    DocListAp docInfo;
+    docInfo = FindDoc(idDoc, docs);
+
+    FILE *doc;
+    doc = fopen(docInfo->docName, "r");
+
+    while (fscanf(doc, " %1023s", str) == 1) {
+        NoPunctAllLower(str);
+        HshTableInsert(str, idDoc, p, b);
+        pCont++;
+    }
+    docInfo->qntPalavras = pCont;
+}
+
+int calculoRelevancia(int numDocumentos,int qntTermosDoc,int numOcorrencias,int numDocContemTermo){
+
+    int relevancia,somatorio = 0;
+
+    for(int i = 1;i<qntTermosDoc;i++){
+        somatorio = somatorio + (numOcorrencias * (log(numDocumentos)/numDocContemTermo));  
+    }
+    relevancia = (1/numDocumentos)*somatorio;
+    
+    return relevancia;
+}
+
+void ordenarRelevancia(int *a, int left, int right) {
+    int i, j, x, y[1][1];
+     
+    i = left;
+    j = right;
+    x = a[(left + right) / 2][0];
+     
+    while(i <= j) {
+        while(a[i][0] < x && i < right) {
+            i++;
+        }
+        while(a[j][0] > x && j > left) {
+            j--;
+        }
+        if(i <= j) {
+            y[1][1] = a[i][1];
+            a[i][1] = a[j][1];
+            a[j][1] = y[1][1];
+            i++;
+            j--;
+        }
+    }
+     
+    if(j > left) {
+        quick_sort(a, left, j);
+    }
+    if(i < right) {
+        quick_sort(a, i, right);
+    }
 }

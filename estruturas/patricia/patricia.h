@@ -36,3 +36,5 @@ void PatSearch(Palavra palavra, PatAp t);
 PatAp PatInsertEntre(Palavra palavra, PatAp *t, int i, char comp, int idF);
 
 PatAp PatInsert(Palavra palavra, int idF, PatAp *t);
+
+int qntDocHaveTermPat(int idDoc, PatAp t,Palavra palavra);

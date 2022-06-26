@@ -22,3 +22,7 @@ void HshListPrint(HshList list);
 void HshListInsert(Palavra palavra, HshList *list,int idDoc);
 
 HshCellAp FindPalavra(Palavra palavra, HshList list);
+
+HshCellAp FindQntPalavra(Palavra palavra, HshList list);
+
+int qntDocHaveTermHash(int idDoc,HshList list,Palavra palavra);
