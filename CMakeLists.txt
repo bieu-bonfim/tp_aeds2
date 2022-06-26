@@ -17,4 +17,4 @@ add_executable(tp_aeds2
         estruturas/hash/hash.h
         estruturas/hash/hashlist.c
         estruturas/hash/hashlist.h
-        main.c)
+        main.c estruturas/docs/docs.h estruturas/docs/docs.c)

@@ -25,8 +25,8 @@ void InvIndexPrint(InvIndexList list) {
     Aux = list.first -> prox;
     while (Aux != NULL)
     {
-        printf("< %d,", Aux -> qnt);
-        printf("%d > ", Aux -> idDoc);
+        printf(" < %d,", Aux -> qnt);
+        printf("%d >", Aux -> idDoc);
         Aux = Aux -> prox;
     }
 }

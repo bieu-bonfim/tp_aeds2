@@ -13,11 +13,11 @@ typedef struct HshList {
     HshCellAp first, last;
 } HshList;
 
-short HshListVerify(HshList Lista);
+short HshListVerify(HshList list);
 
-void HshListCreate(HshList *Lista);
+void HshListCreate(HshList *list);
 
-void HshListPrint(HshList Lista);
+void HshListPrint(HshList list);
 
 void HshListInsert(Palavra palavra, HshList *list,int idDoc);
 

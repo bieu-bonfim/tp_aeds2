@@ -1,8 +1,6 @@
 #include "hash.h"
 
-
-
-void HshTableGeraPesos(Pesos p){ // Gera valores randomicos entre 1 e 10.000 
+void HshTableGeraPesos(Pesos p){
 	int i, j;
 	struct timeval semente;
 
@@ -29,19 +27,23 @@ void HshTableCreate(HashTable t){
     for (i = 0; i < M; i++) HshListCreate(&t[i]);
 }
 
-HshCellAp HshTableSearch(Palavra palavra, Pesos p, HashTable t) { // Obs.: HshCellAp de retorno aponta para o item anterior da lista
+HshCellAp HshTableSearch(Palavra palavra, Pesos p, HashTable t) {
 	int i;
 	HshCellAp Ap;
 	i = h(palavra, p);
-	if (HshListVerify(t[i])) return NULL;  //HshTableSearch sem sucesso 
-	else 
-	{ Ap = t[i].first;
-		while (Ap->prox->prox != NULL &&
-				strncmp(palavra, Ap->prox->palavra, sizeof(Palavra))) 
-			Ap = Ap->prox;
-		if (!strncmp(palavra, Ap->prox->palavra, sizeof(Palavra))) 
-		return Ap;
-		else return NULL;  // HshTableSearch sem sucesso *
+	if (HshListVerify(t[i])) {
+        return NULL;
+    }
+	else {
+        Ap = t[i].first;
+		while (Ap->prox->prox != NULL && strncmp(palavra, Ap->prox->palavra, sizeof(Palavra))) {
+            Ap = Ap->prox;
+        }
+		if (!strncmp(palavra, Ap->prox->palavra, sizeof(Palavra))) {
+            return Ap;
+        } else {
+            return NULL;
+        }
 	}
 }  
 
@@ -58,10 +60,10 @@ void HshTableInsert(Palavra palavra, int idDoc, Pesos peso, HashTable t)
 void HshTablePrint(HashTable Tabela){ 
 	int i;
 	for (i = 0; i < M; i++) 
-		{ printf("%d: ", i);
-			if (!HshListVerify(Tabela[i]))
-			HshListPrint(Tabela[i]);
-			putchar('\n');
+		{
+			if (!HshListVerify(Tabela[i])) {
+                HshListPrint(Tabela[i]);
+            }
 		}
 } 
 

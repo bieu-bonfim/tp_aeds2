@@ -1,21 +1,21 @@
 #include "hashlist.h"
 
-short HshListVerify(HshList Lista) {
-    return (Lista.first == Lista.last);
+short HshListVerify(HshList list) {
+    return (list.first == list.last);
 }
 
-void HshListCreate(HshList *Lista)
-{ Lista->first = (HshCellAp)malloc(sizeof(HshCell));
-    Lista->last = Lista->first;
-    Lista->first->prox = NULL;
+void HshListCreate(HshList *list)
+{ list->first = (HshCellAp)malloc(sizeof(HshCell));
+    list->last = list->first;
+    list->first->prox = NULL;
 }
 
-void HshListPrint(HshList Lista){
+void HshListPrint(HshList list){
     HshCellAp Aux;
-    Aux = Lista.first->prox;
+    Aux = list.first->prox;
     while (Aux != NULL)
     {
-        printf("%.*s ", N, Aux->palavra);
+        printf("\n\t\t\t>> %.*s >> \t", N, Aux->palavra);
         InvIndexPrint(*Aux->invIndexList);
         Aux = Aux->prox;
     }

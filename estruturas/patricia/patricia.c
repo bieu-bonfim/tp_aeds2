@@ -32,8 +32,7 @@ void PatPrintAlfabetico(PatAp t) {
             PatPrintAlfabetico(t->No.NoInterno.esq);
         }
         if (t->tipo == Externo) {
-
-            printf("\n%s ", t->No.palavra);
+            printf("\n\t\t\t>> %s >> \t", t->No.palavra);
             InvIndexPrint(*t->invIndexList);
 
         }
