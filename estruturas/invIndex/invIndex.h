@@ -1,14 +1,14 @@
-#include <stdlib.h> 
-#include <stdio.h>
-#include <string.h>
+#ifndef INVINDEX_H
+#define INVINDEX_H
+#include "../includes.h"
 
-typedef struct Cell *InvListAp;
+typedef struct InvCell *InvListAp;
 
-typedef struct Cell {
+typedef struct InvCell {
   int idDoc;
   int qnt;
   InvListAp prox;
-} Cell;
+} InvCell;
 
 typedef struct {
   InvListAp first, last;
@@ -22,3 +22,5 @@ void InvIndexAdd(int idDoc, InvIndexList *list);
 void InvIndexPrint(InvIndexList lista);
 
 InvListAp FindIdDoc(int idDoc, InvIndexList list);
+#endif
+

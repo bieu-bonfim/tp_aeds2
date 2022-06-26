@@ -1,6 +1,5 @@
-#include <ctype.h>
-#include <windows.h>
 #include "estruturas/patricia/patricia.h"
+#include "estruturas/hash/hash.h"
 
 #define SIZE 20
 
@@ -18,7 +17,7 @@ void NoPunctAllLower(char * str) {
     }
 }
 
-void InsertWords (char * fileName, int idDoc, PatAp * a) {
+void InsertWords (char * fileName, int idDoc, PatAp * a, HashTable b, Pesos p) {
     unsigned char str[1024];
     FILE *doc;
     doc = fopen(fileName, "r");
@@ -26,11 +25,20 @@ void InsertWords (char * fileName, int idDoc, PatAp * a) {
     while (fscanf(doc, " %1023s", str) == 1) {
         NoPunctAllLower(str);
         *a = PatInsert(str, idDoc, a);
+        HshTableInsert(str, idDoc, p, b);
     }
 }
 
 int main(){
-    PatAp a = NULL; 
+    // Criação da PATRICIA
+    PatAp patricia = NULL;
+
+    // Criação da Hash Table
+    Pesos p;
+    HashTable hashTable;
+    HshTableGeraPesos(p);
+    HshTableCreate(hashTable);
+
     FILE *in_ptr;
     char str[50];
     char file[50];
@@ -95,11 +103,12 @@ int main(){
             }
             for (int i = 0; i < n; i++)
             {
-                InsertWords(files[i], i+1, &a);
+                InsertWords(files[i], i+1, &patricia, hashTable, p);
             }
 
         }else if(opcao == 3){
-            PatPrintAlfabetico(a);
+            PatPrintAlfabetico(patricia);
+            HshTablePrint(hashTable);
         }else if(opcao == 4){
 
         }else if(opcao == 5){

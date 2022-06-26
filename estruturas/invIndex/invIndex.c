@@ -1,7 +1,7 @@
 #include "invIndex.h"
 
 void InvIndexCreateList(InvIndexList *list) {
-    list -> first = (InvListAp) malloc(sizeof(Cell));
+    list -> first = (InvListAp) malloc(sizeof(InvCell));
     list -> last = list -> first;
     list -> first -> prox = NULL;
 }
@@ -13,7 +13,7 @@ void InvIndexAdd(int idDoc, InvIndexList *list) {
         p->qnt = p->qnt + 1;
         return;
     }
-    list -> last -> prox = (InvListAp) malloc(sizeof(Cell));
+    list -> last -> prox = (InvListAp) malloc(sizeof(InvCell));
     list -> last = list -> last -> prox;
     list -> last -> idDoc = idDoc;
     list -> last -> qnt = 1;

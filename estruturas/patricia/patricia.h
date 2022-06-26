@@ -2,8 +2,6 @@
 
 #define D 8   /* depende de Palavra */
 
-typedef unsigned char Palavra[64]; /* a definir, dependendo da aplicacao */
-
 typedef unsigned char IndexLetra;
 
 typedef enum {

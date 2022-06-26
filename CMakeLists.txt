@@ -9,10 +9,12 @@ include_directories(estruturas/patricia)
 
 add_executable(tp_aeds2
         estruturas/invIndex/invIndex.c
+        estruturas/includes.h
         estruturas/invIndex/invIndex.h
         estruturas/patricia/patricia.c
         estruturas/patricia/patricia.h
-        hash.c
-        hash.h
-        main.c
-        separacaoString.c)
+        estruturas/hash/hash.c
+        estruturas/hash/hash.h
+        estruturas/hash/hashlist.c
+        estruturas/hash/hashlist.h
+        main.c)
