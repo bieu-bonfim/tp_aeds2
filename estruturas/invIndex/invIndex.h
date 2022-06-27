@@ -22,5 +22,9 @@ void InvIndexAdd(int idDoc, InvIndexList *list);
 void InvIndexPrint(InvIndexList lista);
 
 InvListAp FindIdDoc(int idDoc, InvIndexList list);
+
+int InvIndexOccurInDoc(int idDoc, InvIndexList list);
+
+int InvIndexNDocs(InvIndexList list);
 #endif
 

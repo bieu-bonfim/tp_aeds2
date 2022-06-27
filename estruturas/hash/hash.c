@@ -54,16 +54,14 @@ void HshTableInsert(Palavra palavra, int idDoc, Pesos peso, HashTable t)
 	} else {
 		InvIndexAdd(idDoc, FindPalavra(palavra, t[h(palavra, peso)])->invIndexList);
 	}
-				
 } 
 
 void HshTablePrint(HashTable Tabela){ 
 	int i;
-	for (i = 0; i < M; i++) 
-		{
-			if (!HshListVerify(Tabela[i])) {
-                HshListPrint(Tabela[i]);
-            }
-		}
+	for (i = 0; i < M; i++) {
+        if (!HshListVerify(Tabela[i])) {
+            HshListPrint(Tabela[i]);
+        }
+    }
 } 
 

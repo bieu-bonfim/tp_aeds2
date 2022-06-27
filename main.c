@@ -1,60 +1,6 @@
-#include "estruturas/patricia/patricia.h"
-#include "estruturas/hash/hash.h"
-#include "estruturas/docs/docs.h"
+#include "aux.c"
 
-#define SIZE 20
-
-void NoPunctAllLower(char * str) {
-    int p = 0;
-    char * str2;
-    strcpy(str2, str);
-    int len = strlen(str2);
-    for (int i = 0; i < len; i++) {
-        str[i] = (char) 0;
-        if (!ispunct(str2[i])) {
-            str[p] = tolower(str2[i]);
-            p++;
-        }
-    }
-}
-
-void InsertWordsPat (DocList docs, int idDoc, PatAp * a) {
-    unsigned char str[1024];
-    int pCont = 0;
-
-    DocListAp docInfo;
-    docInfo = FindDoc(idDoc, docs);
-
-    FILE *doc;
-    doc = fopen(docInfo->docName, "r");
-
-    while (fscanf(doc, " %1023s", str) == 1) {
-        NoPunctAllLower(str);
-        *a = PatInsert(str, idDoc, a);
-        pCont++;
-    }
-    docInfo->qntPalavras = pCont;
-}
-
-void InsertWordsHsh (DocList docs, int idDoc, HashTable b, Pesos p) {
-    unsigned char str[1024];
-    int pCont = 0;
-
-    DocListAp docInfo;
-    docInfo = FindDoc(idDoc, docs);
-
-    FILE *doc;
-    doc = fopen(docInfo->docName, "r");
-
-    while (fscanf(doc, " %1023s", str) == 1) {
-        NoPunctAllLower(str);
-        HshTableInsert(str, idDoc, p, b);
-        pCont++;
-    }
-    docInfo->qntPalavras = pCont;
-}
-
-int main(){
+int main() {
 
     // Criação da PATRICIA
     PatAp patricia = NULL;
@@ -79,9 +25,12 @@ int main(){
     int n = 0, opcao;
     //---------------------------
 
-    // Variáveis funcionamento limpo do código
+    // Variáveis funcionamento da lógica do código
     short patUse = 0;
     short hshUse = 0;
+    char *terms[10];
+    char term[64];
+    int nTerm = 0;
     //---------------------------
 
     while (1) {
@@ -215,13 +164,107 @@ int main(){
                 }
             }
         }else if(opcao == 4){
+            if (DocListVerify(docs))
+            {
+                printf("\n\t\t\t>> Primeiro, insira um arquivo de entrada na opcao 1");
+                continue;
+            }
+            if (patUse == 0 && hshUse == 0)
+            {
+                printf("\n\t\t\t>> Primeiro, construa pelo menos um dos indices invertidos");
+                continue;
+            }
+            while(1) {
+                printf("\n\t\t\t//====================================================================\\\\ \n");
+                printf("\t\t\t||                           Busca de Termos                          ||\n");
+                printf("\t\t\t|]====================================================================[|\n");
+                printf("\t\t\t||                                                                    ||\n");
+                printf("\t\t\t||  1 - Inserir / Alterar termos;                                     ||\n");
+                printf("\t\t\t||  2 - Realizar busca de termos;                                     ||\n");
+                printf("\t\t\t||  3 - Voltar                                                        ||\n");
+                printf("\t\t\t||                                                                    ||\n");
+                printf("\t\t\t\\\\====================================================================// \n");
+                printf("\n\t\t\t>> Escolha uma das opcoes acima: ");
+                scanf("%d",&opcao);
+                if (opcao == 1) {
+                    printf("\n\t\t\t>> Insira os termos de busca (digite . para concluir): ");
+                    nTerm = 0;
+
+                    while (1) {
+                        terms[nTerm] = malloc(sizeof (term)+1);
+                        printf("\n\t\t\t>> ");
+                        scanf("%s", term);
+                        if (strcmp(".", term) == 0 || nTerm == 9) {
+                            break;
+                        }
+                        strcpy(terms[nTerm], term);
+
+                        nTerm++;
+
+                    }
+                } else if(opcao == 2) {
+                    while (1) {
+                        printf("\n\t\t\t//====================================================================\\\\ \n");
+                        printf("\t\t\t||                     Imprimir Indices Invertidos                    ||\n");
+                        printf("\t\t\t|]====================================================================[|\n");
+                        printf("\t\t\t||                                                                    ||\n");
+                        printf("\t\t\t||  1 - Utilizando a arvore PATRICIA;                                 ||\n");
+                        printf("\t\t\t||  2 - Utilizando a Tabela Hash;                                     ||\n");
+                        printf("\t\t\t||  3 - Voltar                                                        ||\n");
+                        printf("\t\t\t||                                                                    ||\n");
+                        printf("\t\t\t\\\\====================================================================// \n");
+                        printf("\n\t\t\t>> Escolha uma das opcoes acima: ");
+                        scanf("%d", &opcao);
+                        float w, relev;
+                        if (opcao == 1) {
+                            if (patUse == 0) {
+                                printf("\n\t\t\t>> Primeiro, construa o indice invetido da PATRICIA");
+                                continue;
+                            }
+                            printf("\n\t\t\t>> Fazendo calculos utilizando a PATRICIA...");
+                            for (int i = 1; i <= n; ++i) {
+                                for (int j = 0; j < nTerm; ++j) {
+                                    w += TermWeightPat(terms[j], i, n, patricia);
+                                }
+                                float qntPalavras = (float) FindDoc(i, docs)->qntPalavras;
+                                relev = (1/(qntPalavras)*w);
+                                printf("%f", relev);
+                            }
+
+                        } else if (opcao == 2) {
+                            if (patUse == 0) {
+                                printf("\n\t\t\t>> Primeiro, construa o indice invetido da Tabela Hash");
+                                continue;
+                            }
+                            printf("\n\t\t\t>> Fazendo calculos utilizando a Tabela Hash...");
+                            for (int i = 1; i <= n; ++i) {
+                                for (int j = 0; j < nTerm; ++j) {
+                                    w += TermWeightHsh(terms[j], i, n, hashTable, p);
+                                }
+                                float qntPalavras = (float) FindDoc(i, docs)->qntPalavras;
+                                relev = (1/(qntPalavras)*w);
+                                printf("%f", relev);
+                            }
+
+                        } else if (opcao == 3) {
+                            break;
+                        }
+                    }
+                    // TODO: buscar termos
+
+
+                } else if(opcao == 3) {
+                    break;
+                }
+            }
 
         }else if(opcao == 5){
             break;
         }else{
-            printf("Opcao nao encontrada, por favor insira uma opcao valida");
+            printf("\n\t\t\t>> Opcao nao encontrada, por favor insira uma opcao valida");
         }
     }
 
     return 0;
 }
+

@@ -62,6 +62,23 @@ void PatSearch(Palavra palavra, PatAp t) {
     }
 }
 
+PatAp PatSearchNode(Palavra palavra, PatAp t) {
+    if (PatVerifyExterno(t)) {
+        if (strcmp(palavra, t->No.palavra) != 0) {
+            return NULL;
+        } else {
+            return t;
+        }
+    }
+    if (strlen(palavra) < t->No.NoInterno.index) {
+        return PatSearchNode(palavra, t->No.NoInterno.esq);
+    } else if (palavra[t->No.NoInterno.index] < t->No.NoInterno.comp) {
+        return PatSearchNode(palavra, t->No.NoInterno.esq);
+    } else {
+        return PatSearchNode(palavra, t->No.NoInterno.dir);
+    }
+}
+
 PatAp PatInsertEntre(Palavra palavra, PatAp *t, int i, char comp, int idDoc) {
     PatAp p;
     if (PatVerifyExterno(*t)) {

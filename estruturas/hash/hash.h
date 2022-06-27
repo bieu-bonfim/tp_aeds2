@@ -2,7 +2,6 @@
 #define M 29
 #define TAMALFABETO 256
 
-// typedef unsigned int  Pesos[n];
 typedef unsigned Pesos[N][TAMALFABETO];
 
 typedef HshList HashTable[M];

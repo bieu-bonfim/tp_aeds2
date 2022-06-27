@@ -1,9 +1,5 @@
 #include "../invIndex/invIndex.h"
 
-#define D 8   /* depende de Palavra */
-
-typedef unsigned char IndexLetra;
-
 typedef enum {
   Interno, Externo
 } TipoNo;
@@ -32,6 +28,8 @@ PatAp PatCreateInterno(int i, PatAp *esq,  PatAp *dir, char comp);
 void PatPrintAlfabetico(PatAp t);
 
 void PatSearch(Palavra palavra, PatAp t);
+
+PatAp PatSearchNode(Palavra palavra, PatAp t);
 
 PatAp PatInsertEntre(Palavra palavra, PatAp *t, int i, char comp, int idF);
 

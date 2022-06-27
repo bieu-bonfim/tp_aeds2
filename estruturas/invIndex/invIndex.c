@@ -45,3 +45,30 @@ InvListAp FindIdDoc(int idDoc, InvIndexList list)
     }
     return NULL;
 }
+
+int InvIndexOccurInDoc(int idDoc, InvIndexList list) {
+    InvListAp Aux;
+    Aux = list.first->prox;
+
+    while (Aux != NULL)
+    {
+        if (Aux->idDoc == idDoc) {
+            return Aux->qnt;
+        }
+        Aux = Aux -> prox;
+    }
+    return 0;
+}
+
+int InvIndexNDocs(InvIndexList list) {
+    InvListAp Aux;
+    int i = 0;
+    Aux = list.first->prox;
+
+    while (Aux != NULL)
+    {
+        i++;
+        Aux = Aux -> prox;
+    }
+    return i;
+}

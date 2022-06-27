@@ -3,6 +3,7 @@
 #define N 64
 
 typedef struct HshCell* HshCellAp;
+
 typedef struct HshCell {
     Palavra palavra;
     InvIndexList *invIndexList;
