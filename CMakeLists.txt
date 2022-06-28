@@ -20,4 +20,4 @@ add_executable(tp_aeds2
         main.c 
         estruturas/docs/docs.h 
         estruturas/docs/docs.c
-        mainAux.c)
+        mainAux.c mainAux.h)

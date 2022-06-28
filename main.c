@@ -1,4 +1,4 @@
-#include "aux.c"
+#include "mainAux.h"
 
 int main() {
 
@@ -215,7 +215,7 @@ int main() {
                         printf("\t\t\t\\\\====================================================================// \n");
                         printf("\n\t\t\t>> Escolha uma das opcoes acima: ");
                         scanf("%d", &opcao);
-                        float w, relev;
+                        float w, relev, qntPalavras, *results = (float*) malloc(sizeof (float ) * n);
                         if (opcao == 1) {
                             if (patUse == 0) {
                                 printf("\n\t\t\t>> Primeiro, construa o indice invetido da PATRICIA");
@@ -226,11 +226,12 @@ int main() {
                                 for (int j = 0; j < nTerm; ++j) {
                                     w += TermWeightPat(terms[j], i, n, patricia);
                                 }
-                                float qntPalavras = (float) FindDoc(i, docs)->qntPalavras;
+                                qntPalavras = (float) FindDoc(i, docs)->qntPalavras;
                                 relev = (1/(qntPalavras)*w);
-                                printf("%f", relev);
+                                FindDoc(i, docs)->relev = relev;
+                                results[i-1] = relev;
+                                w = 0;
                             }
-
                         } else if (opcao == 2) {
                             if (patUse == 0) {
                                 printf("\n\t\t\t>> Primeiro, construa o indice invetido da Tabela Hash");
@@ -241,17 +242,22 @@ int main() {
                                 for (int j = 0; j < nTerm; ++j) {
                                     w += TermWeightHsh(terms[j], i, n, hashTable, p);
                                 }
-                                float qntPalavras = (float) FindDoc(i, docs)->qntPalavras;
+                                qntPalavras = (float) FindDoc(i, docs)->qntPalavras;
                                 relev = (1/(qntPalavras)*w);
-                                printf("%f", relev);
+                                FindDoc(i, docs)->relev = relev;
+                                results[i-1] = relev;
+                                w = 0;
                             }
-
                         } else if (opcao == 3) {
                             break;
                         }
+                        selectionSort(results, n);
+                        for (int i = 0; i < n; ++i) {
+                            DocListAp ext = FindDocByRelev(results[i], docs);
+                            printf("\n\t\t\t>> Documento %d: %s, Relevancia -> %f\n", ext->idDoc, ext->docName, ext->relev);
+                        }
+                        free(results);
                     }
-                    // TODO: buscar termos
-
 
                 } else if(opcao == 3) {
                     break;

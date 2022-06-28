@@ -35,15 +35,8 @@ HshCellAp HshTableSearch(Palavra palavra, Pesos p, HashTable t) {
         return NULL;
     }
 	else {
-        Ap = t[i].first;
-		while (Ap->prox->prox != NULL && strncmp(palavra, Ap->prox->palavra, sizeof(Palavra))) {
-            Ap = Ap->prox;
-        }
-		if (!strncmp(palavra, Ap->prox->palavra, sizeof(Palavra))) {
-            return Ap;
-        } else {
-            return NULL;
-        }
+        HshCellAp ap = FindPalavra(palavra, t[i]);
+        return ap;
 	}
 }  
 

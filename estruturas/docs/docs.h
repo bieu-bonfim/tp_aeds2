@@ -6,6 +6,7 @@ typedef struct DocCell {
     int idDoc;
     int qntPalavras;
     Palavra docName;
+    float relev;
     DocListAp prox;
 } DocCell;
 
@@ -26,4 +27,5 @@ void DocPrint(DocList lista);
 
 DocListAp FindDoc(int idDoc, DocList list);
 
+DocListAp FindDocByRelev(float relev, DocList list);
 

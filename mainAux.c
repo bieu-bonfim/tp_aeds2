@@ -1,6 +1,4 @@
-#include "estruturas/patricia/patricia.h"
-#include "estruturas/hash/hash.h"
-#include "estruturas/docs/docs.h"
+#include "mainAux.h"
 
 float TermWeightPat(char term[64], int idDoc, int nDocs, PatAp a) {
     float w;
@@ -76,4 +74,31 @@ void InsertWordsHsh (DocList docs, int idDoc, HashTable b, Pesos p) {
         pCont++;
     }
     docInfo->qntPalavras = pCont;
+}
+
+// https://www.geeksforgeeks.org/c-program-to-sort-an-array-in-ascending-order/
+void selectionSort(float arr[], int n)
+{
+    int i, j, min_idx;
+
+    // One by one move boundary of unsorted subarray
+    for (i = 0; i < n - 1; i++) {
+
+        // Find the minimum element in unsorted array
+        min_idx = i;
+        for (j = i + 1; j < n; j++)
+            if (arr[j] > arr[min_idx])
+                min_idx = j;
+
+        // Swap the found minimum element
+        // with the first element
+        swap(&arr[min_idx], &arr[i]);
+    }
+}
+
+void swap(float* xp, float* yp)
+{
+    float temp = *xp;
+    *xp = *yp;
+    *yp = temp;
 }

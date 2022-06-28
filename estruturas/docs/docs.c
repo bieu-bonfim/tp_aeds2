@@ -60,3 +60,18 @@ DocListAp FindDoc(int idDoc, DocList list)
     }
     return NULL;
 }
+
+DocListAp FindDocByRelev(float relev, DocList list)
+{
+    DocListAp Aux;
+    Aux = list.first->prox;
+
+    while (Aux != NULL)
+    {
+        if (Aux->relev == relev) {
+            return Aux;
+        }
+        Aux = Aux -> prox;
+    }
+    return NULL;
+}
